@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Read ECG — Угадай ритм</title>
+  <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- СТАРТ -->
+  <div id="screen-start" class="screen">
+    <div class="glass-card start-card">
+      <svg class="ecg-logo" viewBox="0 0 300 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="300" height="64" rx="8" fill="#fffef8" stroke="rgba(220,160,160,0.4)" stroke-width="1"/>
+        <g stroke="rgba(220,130,130,0.2)" stroke-width="0.5">
+          <line x1="0" y1="16" x2="300" y2="16"/><line x1="0" y1="32" x2="300" y2="32"/><line x1="0" y1="48" x2="300" y2="48"/>
+          <line x1="40" y1="0" x2="40" y2="64"/><line x1="80" y1="0" x2="80" y2="64"/><line x1="120" y1="0" x2="120" y2="64"/>
+          <line x1="160" y1="0" x2="160" y2="64"/><line x1="200" y1="0" x2="200" y2="64"/><line x1="240" y1="0" x2="240" y2="64"/><line x1="280" y1="0" x2="280" y2="64"/>
+        </g>
+        <polyline fill="none" stroke="#1a1814" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          points="10,32 30,32 32,30 34,32 38,32 40,20 41,6 42,20 44,32 46,32 48,30 50,29 52,27 58,27 60,30 62,32
+                  70,32 72,30 74,32 78,32 80,20 81,6 82,20 84,32 86,32 88,30 90,29 92,27 98,27 100,30 102,32
+                  110,32 112,30 114,32 118,32 120,20 121,6 122,20 124,32 126,32 128,30 130,29 132,27 138,27 140,30 142,32
+                  150,32 152,30 154,32 158,32 160,20 161,6 162,20 164,32 166,32 168,30 170,29 172,27 178,27 180,30 182,32
+                  190,32 192,30 194,32 198,32 200,20 201,6 202,20 204,32 206,32 208,30 210,29 212,27 218,27 220,30 222,32
+                  230,32 232,30 234,32 238,32 240,20 241,6 242,20 244,32 246,32 248,30 250,29 252,27 258,27 260,30 262,32
+                  270,32 272,30 274,32 278,32 280,20 281,6 282,20 284,32 286,32 288,30 290,32 295,32"/>
+      </svg>
+
+      <h1 class="app-title">Read <em>ECG</em></h1>
+      <p class="app-subtitle">Клиническая ситуация + ЭКГ на экране.<br>Поставь правильный диагноз.</p>
+
+      <div class="start-meta">
+        <span class="meta-tag">🫀 Кардиология</span>
+        <span class="meta-tag">SVG ЭКГ</span>
+        <span class="meta-tag">Клинический разбор</span>
+      </div>
+
+      <button class="btn btn-primary" id="btn-start">Начать</button>
+    </div>
+  </div>
+
+  <!-- ИГРА -->
+  <div id="screen-game" class="screen">
+    <div class="game-header">
+      <div class="progress-label">
+        Задача <span id="progress-current">1</span> / <span id="progress-total">20</span>
+      </div>
+      <div class="progress-dots" id="progress-dots"></div>
+    </div>
+
+    <div class="task-card">
+      <div class="task-header">
+        <div class="task-number" id="task-number">ЭКГ № 01</div>
+        <p class="task-title" id="task-title"></p>
+      </div>
+      <div class="ecg-section">
+        <div class="ecg-label">ЭКГ</div>
+        <div id="ecg-container"></div>
+      </div>
+      <div class="options-section" id="options-container"></div>
+      <div class="explanation-box" id="explanation-box">
+        <p id="explanation-text"></p>
+      </div>
+    </div>
+
+    <div class="game-footer">
+      <button class="btn btn-ghost" id="btn-skip">Пропустить →</button>
+      <button class="btn btn-secondary" id="btn-next" style="display:none;">Следующая →</button>
+    </div>
+  </div>
+
+  <!-- РЕЗУЛЬТАТ -->
+  <div id="screen-result" class="screen">
+    <div class="glass-card result-card">
+      <div class="result-icon" id="result-icon">🏆</div>
+      <h2 class="result-title" id="result-title">Результат</h2>
+      <p class="result-grade" id="result-grade"></p>
+      <div class="result-stats">
+        <div class="result-stat">
+          <span class="result-stat-value correct" id="result-correct">0</span>
+          <span class="result-stat-label">Верно</span>
+        </div>
+        <div class="result-stat">
+          <span class="result-stat-value wrong" id="result-wrong">0</span>
+          <span class="result-stat-label">Неверно</span>
+        </div>
+      </div>
+      <div class="result-buttons">
+        <button class="btn btn-primary" id="btn-play-again">Ещё раз</button>
+        <button class="btn btn-secondary" id="btn-to-menu">В меню</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Подключаем все блоки вопросов -->
+<script src="questions-infarct.js"></script>
+<script src="questions-arrhythmia.js"></script>
+<script src="questions-blocks.js"></script>
+<script src="questions-other.js"></script>
+<script src="app.js"></script>
+<script>
+  if (typeof vkBridge !== 'undefined') vkBridge.send('VKWebAppInit');
+</script>
+</body>
+</html>
